@@ -13,15 +13,25 @@ def get_random_user_agent():
     return random.choice(Constants.USER_AGENTS)
 
 
-def get_soup(url):
-    session = requests.Session()
-    session.headers.update({"User-Agent": get_random_user_agent()})
-    response = session.get(url)
-    if response.status_code != 200:
-        print(f"Error: {response.status_code}")
-        return None
+def get_soup(url, max_retries=5):
+    retry_count = 0
+    while retry_count < max_retries:
+        with requests.Session() as session:
+            user_agent = get_random_user_agent()
+            session.headers.update({"User-Agent": user_agent})
+            response = session.get(url)
+            if response.status_code == 200:
+                return BeautifulSoup(response.text, Constants.HTML_PARSER)
+            else:
+                print(f"Error: {response.status_code}")
 
-    return BeautifulSoup(response.text, Constants.HTML_PARSER)
+                Constants.USER_AGENTS.remove(user_agent)
+                if not Constants.USER_AGENTS:
+                    return None
+
+                retry_count += 1
+
+    return None
 
 
 def get_movie_links(soup):
@@ -192,10 +202,10 @@ def main():
                 db.set(movie_key, movie_details_json)
                 print(f"Added film: {movie_details['title_original']}")
 
-            sleep(1)
+            sleep(random.uniform(1, 3))
 
         page_num += 1
-        sleep(4)
+        sleep(random.uniform(2, 5))
 
 
 if __name__ == "__main__":

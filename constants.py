@@ -9,10 +9,16 @@ class Constants:
     USER_AGENTS = [
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36",
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:92.0) Gecko/20100101 Firefox/92.0",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.2 Safari/605.1.15",
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36 Edg/93.0.961.38"
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36 Edg/93.0.961.38",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.902.78 Safari/537.36 Edg/92.0.902.78",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0"
     ]
+
     HTML_PARSER = "html.parser"
 
     H1_TAG = "h1"
@@ -21,7 +27,6 @@ class Constants:
     DIV_TAG = "div"
     SPAN_TAG = "span"
     PARAGRAPH_TAG = "p"
-
     HREF_ATTRIBUTE = "href"
 
     FILMS_ITEM_CLASS = "b-content__inline_items"
@@ -60,3 +65,13 @@ class Constants:
     SPRING = "Spring"
     SUMMER = "Summer"
     AUTUMN = "Autumn"
+
+    RATE_GROUP_0_2 = "[0-2]"
+    RATE_GROUP_2_4 = "(2-4]"
+    RATE_GROUP_4_6 = "(4-6]"
+    RATE_GROUP_6_8 = "(6-8]"
+    RATE_GROUP_8_10 = "(8-10]"
+
+    PLOT_HEIGHT = 4
+    PLOT_WIDTH = 6
+    PLOT_DPI = 600
