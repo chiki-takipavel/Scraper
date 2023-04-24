@@ -10,6 +10,7 @@ python = "^3.11"
 beautifulsoup4 = "^4.12.2"
 redis = "^4.5.4"
 matplotlib = "^3.7.1"
+scikit-learn = "^1.2.2"
 
 
 [build-system]
