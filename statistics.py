@@ -1,30 +1,13 @@
-import json
 import redis
-from constants import Constants
+from utils.logger import get_logger
+from utils.movies_utils import get_movies_from_db, get_unique_movies
+from utils.constants import Constants
 from datetime import datetime
 import matplotlib.pyplot as plt
 from collections import defaultdict
 
 
-def get_movies_from_db(connection):
-    movie_keys = connection.keys("movie:*")
-    movies = [json.loads(connection.get(key)) for key in movie_keys]
-
-    return movies
-
-
-def get_unique_movies(movies):
-    unique_movies = []
-    seen_movies = set()
-
-    for movie in movies:
-        title_year = (movie["title_original"], movie["year"])
-
-        if title_year not in seen_movies:
-            unique_movies.append(movie)
-            seen_movies.add(title_year)
-
-    return unique_movies
+logger = get_logger("statistics")
 
 
 def get_season(date):
@@ -63,7 +46,7 @@ def count_movies_by_season(movies):
                 season = get_season(date_object)
                 seasons_counts[season] += 1
             except ValueError as e:
-                print(f"Error: {premiere_date}: {e}")
+                logger.error(f"{premiere_date}: {e}")
 
     return seasons_counts
 
@@ -152,7 +135,7 @@ def plot_movies_by_season(seasons_counts):
 def plot_pie_chart(title, labels, values):
     plt.figure(figsize=(Constants.PLOT_WIDTH, Constants.PLOT_HEIGHT), dpi=Constants.PLOT_DPI)
     plt.title(title)
-    plt.pie(values, labels=labels, autopct='%1.1f%%')
+    plt.pie(values, labels=labels, autopct="%1.1f%%")
     plt.show()
 
 
@@ -205,15 +188,15 @@ def plot_movies_by_rating(ratings_counts, platform="imdb"):
 
 
 def main():
-    db = redis.Redis(
+    with redis.Redis(
         host=Constants.REDIS_HOST,
         port=Constants.REDIS_PORT,
         db=Constants.REDIS_DB,
         charset=Constants.REDIS_CHARSET,
         decode_responses=True
-    )
+    ) as db:
+        movies = get_movies_from_db(db)
 
-    movies = get_movies_from_db(db)
     unique_movies = get_unique_movies(movies)
 
     seasons_counts = count_movies_by_season(unique_movies)
