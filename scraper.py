@@ -5,8 +5,12 @@ from bs4 import BeautifulSoup
 import random
 import redis
 from time import sleep
-from constants import Constants
+from utils.constants import Constants
+from utils.logger import get_logger
 from datetime import datetime
+
+
+logger = get_logger("scraper")
 
 
 def get_random_user_agent():
@@ -23,7 +27,7 @@ def get_soup(url, max_retries=5):
             if response.status_code == 200:
                 return BeautifulSoup(response.text, Constants.HTML_PARSER)
             else:
-                print(f"Error: {response.status_code}")
+                logger.warning(f"Status code: {response.status_code}")
 
                 Constants.USER_AGENTS.remove(user_agent)
                 if not Constants.USER_AGENTS:
@@ -173,39 +177,38 @@ def get_kinopoisk_rate(soup):
 
 
 def main():
-    db = redis.Redis(
+    with redis.Redis(
         host=Constants.REDIS_HOST,
         port=Constants.REDIS_PORT,
         db=Constants.REDIS_DB,
         charset=Constants.REDIS_CHARSET,
         decode_responses=True
-    )
+    ) as db:
+        page_num = 1
+        while True:
+            logger.info(f"Analyze page: {page_num}")
+            url = f"{Constants.BASE_URL}/page/{page_num}/"
+            soup = get_soup(url)
+            if not soup:
+                break
 
-    page_num = 1
-    while True:
-        print(f"Analyze page: {page_num}")
-        url = f"{Constants.BASE_URL}/page/{page_num}/"
-        soup = get_soup(url)
-        if not soup:
-            break
+            movie_links = get_movie_links(soup)
+            if not movie_links:
+                break
 
-        movie_links = get_movie_links(soup)
-        if not movie_links:
-            break
+            for link in movie_links:
+                logger.info(f"Analyze film: {link}")
+                movie_details = get_movie_details(link)
+                if movie_details:
+                    movie_key = f"movie:{movie_details['title_original']}:{movie_details['year']}"
+                    movie_details_json = json.dumps(movie_details)
+                    db.set(movie_key, movie_details_json)
+                    logger.info(f"Added film: {movie_details['title_original']}")
 
-        for link in movie_links:
-            print(f"Analyze film: {link}")
-            movie_details = get_movie_details(link)
-            if movie_details:
-                movie_key = f"movie:{movie_details['title_original']}:{movie_details['year']}"
-                movie_details_json = json.dumps(movie_details)
-                db.set(movie_key, movie_details_json)
-                print(f"Added film: {movie_details['title_original']}")
+                sleep(random.uniform(1, 3))
 
-            sleep(random.uniform(1, 3))
-
-        page_num += 1
-        sleep(random.uniform(2, 5))
+            page_num += 1
+            sleep(random.uniform(2, 5))
 
 
 if __name__ == "__main__":
