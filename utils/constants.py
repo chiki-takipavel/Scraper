@@ -84,6 +84,6 @@ class Constants:
     MIN_LEARNING_RATE = 1e-6
     DECAY_STEPS = 5000
     DECAY_RATE = 0.9
-    BATCH_SIZE = 32
+    BATCH_SIZE = 64
     EPOCHS = 50
     EPOCHS_RANGE = range(EPOCHS)
