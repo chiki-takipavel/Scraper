@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:latest
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+
+  movies_scraper:
+    build: .
+    depends_on:
+      - redis
+
+  statistics:
+    build: .
+    command: ["python", "statistics.py"]
+    depends_on:
+      - redis
+    volumes:
+      - ./plots:/app/plots
+
+volumes:
+  redis_data:
