@@ -3,10 +3,12 @@ from utils.logger import get_logger
 from utils.movies_utils import get_movies_from_db, get_unique_movies
 from utils.constants import Constants
 from datetime import datetime
+import matplotlib
 import matplotlib.pyplot as plt
 from collections import defaultdict
 
 
+matplotlib.use("Agg")
 logger = get_logger("statistics")
 
 
@@ -108,7 +110,8 @@ def count_movies_by_genre(movies, top_count=5):
     genres_counts = defaultdict(int)
     for movie in movies:
         for genre in movie["genres"]:
-            genres_counts[genre] += 1
+            if genre not in Constants.IGNORED_GENRES:
+                genres_counts[genre] += 1
 
     genres_count = len(genres_counts)
     if genres_count < top_count:
@@ -124,11 +127,13 @@ def plot_movies_by_season(seasons_counts):
     seasons = list(seasons_counts.keys())
     counts = list(seasons_counts.values())
 
+    title = "Number of Movies by Season"
     plt.figure(figsize=(Constants.PLOT_WIDTH, Constants.PLOT_HEIGHT), dpi=Constants.PLOT_DPI)
-    plt.title("Number of Movies by Season")
+    plt.title(title)
     plt.xlabel("Season")
     plt.ylabel("Number of Movies")
     plt.bar(seasons, counts)
+    plt.savefig(f"{Constants.PLOTS_FOLDER}/{title}.{Constants.PLOT_FILE_FORMAT}")
     plt.show()
 
 
@@ -136,6 +141,7 @@ def plot_pie_chart(title, labels, values):
     plt.figure(figsize=(Constants.PLOT_WIDTH, Constants.PLOT_HEIGHT), dpi=Constants.PLOT_DPI)
     plt.title(title)
     plt.pie(values, labels=labels, autopct="%1.1f%%")
+    plt.savefig(f"{Constants.PLOTS_FOLDER}/{title}.{Constants.PLOT_FILE_FORMAT}")
     plt.show()
 
 
@@ -156,14 +162,16 @@ def plot_movies_by_genre(genres_counts):
 def plot_correlation_imdb_kinopoisk(both_ratings):
     imdb_ratings, kinopoisk_ratings = both_ratings
 
+    title = "Correlation Between IMDb and Kinopoisk Ratings"
     plt.figure(figsize=(Constants.PLOT_WIDTH, Constants.PLOT_HEIGHT), dpi=Constants.PLOT_DPI)
-    plt.title("Correlation Between IMDb and Kinopoisk Ratings")
+    plt.title(title)
     plt.xlabel("IMDb Ratings")
     plt.ylabel("Kinopoisk Ratings")
-    plt.scatter(imdb_ratings, kinopoisk_ratings)
+    plt.scatter(imdb_ratings, kinopoisk_ratings, s=Constants.SCATTER_POINT_SIZE)
     frame = plt.gca()
     frame.axes.get_xaxis().set_ticks([])
     frame.axes.get_yaxis().set_ticks([])
+    plt.savefig(f"{Constants.PLOTS_FOLDER}/{title}.{Constants.PLOT_FILE_FORMAT}")
     plt.show()
 
 
@@ -179,11 +187,13 @@ def plot_movies_by_rating(ratings_counts, platform="imdb"):
     ratings = list(ratings_counts.keys())
     counts = list(ratings_counts.values())
 
+    title = f"Number of Movies by Rating ({platform_name})"
     plt.figure(figsize=(Constants.PLOT_WIDTH, Constants.PLOT_HEIGHT), dpi=Constants.PLOT_DPI)
-    plt.title(f"Number of Movies by Rating ({platform_name})")
+    plt.title(title)
     plt.xlabel("Rate Group")
     plt.ylabel("Number of Movies")
     plt.bar(ratings, counts)
+    plt.savefig(f"{Constants.PLOTS_FOLDER}/{title}.{Constants.PLOT_FILE_FORMAT}")
     plt.show()
 
 
@@ -198,6 +208,7 @@ def main():
         movies = get_movies_from_db(db)
 
     unique_movies = get_unique_movies(movies)
+    logger.debug(len(unique_movies))
 
     seasons_counts = count_movies_by_season(unique_movies)
     countries_counts = count_movies_by_country(unique_movies)

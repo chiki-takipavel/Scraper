@@ -79,5 +79,5 @@ class Constants:
     PLOT_DPI = 600
     SCATTER_POINT_SIZE = 2
 
-    PLOTS_FOLDER = "./plots/"
-    PLOT_FILE_FORMAT = ".png"
+    PLOTS_FOLDER = "./plots"
+    PLOT_FILE_FORMAT = "png"
