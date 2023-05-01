@@ -1,7 +1,7 @@
 class Constants:
     BASE_URL = "https://hdrezka.co"
 
-    REDIS_HOST = "localhost"
+    REDIS_HOST = "redis"
     REDIS_PORT = 6379
     REDIS_DB = 0
     REDIS_CHARSET = "utf-8"
@@ -66,6 +66,8 @@ class Constants:
     SUMMER = "Summer"
     AUTUMN = "Autumn"
 
+    IGNORED_GENRES = ["Зарубежные", "Русские", "Советские", "Украинские"]
+
     RATE_GROUP_0_2 = "[0-2]"
     RATE_GROUP_2_4 = "(2-4]"
     RATE_GROUP_4_6 = "(4-6]"
@@ -75,15 +77,7 @@ class Constants:
     PLOT_HEIGHT = 4
     PLOT_WIDTH = 6
     PLOT_DPI = 600
+    SCATTER_POINT_SIZE = 2
 
-    DATA_COLUMN_NAME = "data"
-    LABELS_COLUMN_NAME = "labels"
-    TOKENIZER_NUM_WORDS = 10000
-    TOKENIZER_OOV_TOKEN = "<OOV>"
-    INITIAL_LEARNING_RATE = 0.001
-    MIN_LEARNING_RATE = 1e-6
-    DECAY_STEPS = 5000
-    DECAY_RATE = 0.9
-    BATCH_SIZE = 64
-    EPOCHS = 50
-    EPOCHS_RANGE = range(EPOCHS)
+    PLOTS_FOLDER = "./plots/"
+    PLOT_FILE_FORMAT = ".png"

@@ -1,5 +1,4 @@
 import json
-from collections import defaultdict
 
 
 def get_movies_from_db(connection):
@@ -19,18 +18,3 @@ def get_unique_movies(movies):
             seen_movies.add(title_year)
 
     return unique_movies
-
-
-def get_genres_classes(movies):
-    movies_genres = defaultdict(int)
-    for movie in movies:
-        genres = movie["genres"]
-        if genres:
-            first_genre = genres[0]
-            if first_genre:
-                movies_genres[first_genre] += 1
-
-    genres = dict(sorted(movies_genres.items(), key=lambda x: x[1], reverse=True)[:5])
-    genres_classes = list(genres.keys())
-
-    return genres_classes
