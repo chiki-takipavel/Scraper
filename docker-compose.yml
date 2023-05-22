@@ -15,7 +15,7 @@ services:
 
   statistics:
     build: .
-    command: ["python", "statistics.py"]
+    command: ["python", "movies_statistics.py"]
     depends_on:
       - redis
     volumes:

@@ -1,13 +1,11 @@
 import unittest
 from bs4 import BeautifulSoup
-from scraper import (
-    get_title, get_original_title, get_description, get_genres, get_duration,
-    get_countries, get_premier_date, get_imdb_rate, get_kinopoisk_rate
-)
+from scraper import Scraper
 
 
 class TestScraper(unittest.TestCase):
     def setUp(self):
+        self.scraper = Scraper(None)
         html = """
             <html>
                 <body>
@@ -54,46 +52,46 @@ class TestScraper(unittest.TestCase):
         self.soup = BeautifulSoup(html, "html.parser")
 
     def test_get_title(self):
-        result = get_title(self.soup)
+        result = self.scraper.get_title(self.soup)
 
         self.assertEqual(result, "Тестовый фильм")
 
     def test_get_original_title(self):
-        result = get_original_title(self.soup)
+        result = self.scraper.get_original_title(self.soup)
 
         self.assertEqual(result, "Тестовый фильм / Test movie")
 
     def test_get_description(self):
-        result = get_description(self.soup)
+        result = self.scraper.get_description(self.soup)
 
         self.assertEqual(result, "Описание тестового фильма.")
 
     def test_get_genres(self):
-        result = get_genres(self.soup)
+        result = self.scraper.get_genres(self.soup)
 
         self.assertEqual(result, ["Драмы", "Триллеры"])
 
     def test_get_duration(self):
-        result = get_duration(self.soup)
+        result = self.scraper.get_duration(self.soup)
 
         self.assertEqual(result, "120 мин.")
 
     def test_get_countries(self):
-        result = get_countries(self.soup)
+        result = self.scraper.get_countries(self.soup)
 
         self.assertEqual(result, ["США", "Великобритания"])
 
     def test_get_premier_date(self):
-        result = get_premier_date(self.soup)
+        result = self.scraper.get_premier_date(self.soup)
 
         self.assertEqual(result, ("2013-09-08", "2013"))
 
     def test_get_imdb_rate(self):
-        result = get_imdb_rate(self.soup)
+        result = self.scraper.get_imdb_rate(self.soup)
 
         self.assertEqual(result, "8.2")
 
     def test_get_kinopoisk_rate(self):
-        result = get_kinopoisk_rate(self.soup)
+        result = self.scraper.get_kinopoisk_rate(self.soup)
 
         self.assertEqual(result, "7.71")
